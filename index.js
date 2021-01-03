@@ -1,3 +1,3 @@
-import TicketrAPI from './src/TicketrAPI/TicketrAPI.js';
+import TicketrAPI from './src/TicketrAPI';
 
-export default { TicketrAPI };
+export default TicketrAPI;
