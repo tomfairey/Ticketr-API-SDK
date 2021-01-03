@@ -1,0 +1,24 @@
+{
+  "name": "ticketr-api-sdk",
+  "version": "1.0.0",
+  "description": "SDK for the Ticketr API",
+  "main": "index.js",
+  "scripts": {
+    "test": "nodemon -r esm test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomfairey/Ticketr-API-SDK.git"
+  },
+  "author": "tomfairey",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tomfairey/Ticketr-API-SDK/issues"
+  },
+  "homepage": "https://github.com/tomfairey/Ticketr-API-SDK#readme",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "esm": "^3.2.25",
+    "nodemon": "^2.0.6"
+  }
+}
