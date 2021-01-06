@@ -7,6 +7,7 @@ export default class API {
     #lastRequest = 0;
     #lastRequests = {};
     #completingRequest = null;
+    #headers = {};
 
     static errorCodes = {
         notFound: 404,
@@ -24,6 +25,10 @@ export default class API {
         this.#token = token;
     }
 
+    set header({name, data}) {
+        this.#headers[`${name}`] = `${data}`;
+    }
+
     async sendRequest(
         method = 'get', path = '/', data = null
     ) {
@@ -36,7 +41,8 @@ export default class API {
                 url: url,
                 data: data,
                 responseType: "json",
-                headers: {},
+                headers: this.#headers,
+                withCredentials: true,
                 onDownloadProgress(event) {
                     if (timestampTriggered) return
                     timestampTriggered = true
@@ -68,7 +74,7 @@ export default class API {
 
         switch(e.status) {
             case 400:
-                errorCode = "BAD_REQUEST";
+                errorCode = e.data.code ? e.data.code : "BAD_REQUEST";
                 errorMessage = e.data.message ? e.data.message : "Server was unable to understand the request";
                 break;
             case 401:
