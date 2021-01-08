@@ -21,7 +21,7 @@ export default class API {
         this.#defaultTimeout = defaultTimeout;
     };
 
-    set token(token) {
+    set setToken(token) {
         this.#token = token;
     }
 
@@ -43,12 +43,12 @@ export default class API {
                 responseType: "json",
                 headers: this.#headers,
                 withCredentials: true,
-                onDownloadProgress(event) {
-                    if (timestampTriggered) return
-                    timestampTriggered = true
-                    this.lastRequest = Date.now()
-                    self.lastRequests[request.methodID] = Date.now()
-                },
+                // onDownloadProgress(event) {
+                //     if (timestampTriggered) return
+                //     timestampTriggered = true
+                //     this.lastRequest = Date.now()
+                //     self.lastRequests[request.methodID] = Date.now()
+                // },
             };
 
             if(this.#token) {

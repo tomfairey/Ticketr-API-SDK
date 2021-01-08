@@ -6,11 +6,25 @@ export default class TicketrAPI extends API {
     #profile
     #token
     
-    constructor() {
+    constructor({
+        profile = null,
+        token = null
+    }) {
         super({
             domain: "https://api.ticketr.toms-home.co.uk",
             defaultTimeout: 60000
-        })
+        });
+        
+        if(!!profile) {
+            this.header = {
+                name: "X-Profile",
+                data: profile
+            };
+        }
+        if(!!token) {
+            this.#token = token;
+            this.setToken = token;
+        }
     }
 
     get user() {
@@ -18,6 +32,9 @@ export default class TicketrAPI extends API {
     }
     get profile() {
         return this.#profile;
+    }
+    get token() {
+        return this.#token;
     }
     get hasToken() {
         return !!this.#token;
@@ -83,11 +100,10 @@ export default class TicketrAPI extends API {
             let authResponse;
             try {
                 authResponse = await this.sendRequest('post', '/auth/login', {username, password});
-                
 
                 if(authResponse.status == 200 && authResponse.data.hasOwnProperty('accessToken')) {
                     this.#token = authResponse.data['accessToken'];
-                    this.token = authResponse.data['accessToken'];
+                    this.setToken = authResponse.data['accessToken'];
 
                     resolve({user: await this.getUser()});
                 } else {
@@ -106,9 +122,9 @@ export default class TicketrAPI extends API {
 
                 if(authResponse.status == 200 && authResponse.data.hasOwnProperty('accessToken')) {
                     this.#token = authResponse.data['accessToken'];
-                    this.token = authResponse.data['accessToken'];
+                    this.setToken = authResponse.data['accessToken'];
 
-                    resolve({user: await this.getUser()});
+                    resolve({user: await this.getUser(), profile: await this.getProfile()});
                 } else {
                     reject(authResponse);
                 }
