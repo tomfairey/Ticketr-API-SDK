@@ -1,5 +1,5 @@
 import API from '../API/API.js';
-import { TicketrUser, TicketrProfile } from './classes';
+import { TicketrBasket, TicketrOrder, TicketrProfile, TicketrUser } from './classes';
 
 export default class TicketrAPI extends API {
     #user
@@ -14,7 +14,7 @@ export default class TicketrAPI extends API {
             domain: "https://api.ticketr.toms-home.co.uk",
             defaultTimeout: 60000
         });
-        
+
         if(!!profile) {
             this.header = {
                 name: "X-Profile",
@@ -141,7 +141,51 @@ export default class TicketrAPI extends API {
                 authResponse = await this.sendRequest('get', '/ticketr/basket');
 
                 if(authResponse.status.toString().split("")[0] == "2") {
-                    resolve(authResponse);
+                    let resolution = {};
+                    for(let basketIndex in authResponse.data) {
+                        resolution[basketIndex] = new TicketrBasket(authResponse.data[basketIndex]);
+                    }
+                    resolve(resolution);
+                } else {
+                    reject(authResponse);
+                }
+            } catch(e) {    
+                reject(e);
+            }
+        });
+    }
+    async getOrders() {
+        return await new Promise(async (resolve, reject) => {
+            let authResponse;
+            try {
+                authResponse = await this.sendRequest('get', '/ticketr/order');
+
+                if(authResponse.status.toString().split("")[0] == "2") {
+                    let resolution = [];
+                    for(let order of authResponse.data) {
+                        resolution.push(new TicketrOrder(order));
+                    }
+                    resolve(resolution);
+                } else {
+                    reject(authResponse);
+                }
+            } catch(e) {    
+                reject(e);
+            }
+        });
+    }
+    async postOrder(uuid) {
+        return await new Promise(async (resolve, reject) => {
+            let authResponse;
+            try {
+                authResponse = await this.sendRequest('post', `/ticketr/order/${uuid}`);
+
+                if(authResponse.status.toString().split("")[0] == "2") {
+                    // let resolution = [];
+                    // for(let order of authResponse.data) {
+                    //     resolution.push(new TicketrOrder(order));
+                    // }
+                    resolve(authResponse.data);
                 } else {
                     reject(authResponse);
                 }
