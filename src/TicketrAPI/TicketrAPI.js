@@ -105,7 +105,16 @@ export default class TicketrAPI extends API {
                     this.#token = authResponse.data['accessToken'];
                     this.setToken = authResponse.data['accessToken'];
 
-                    resolve({user: await this.getUser()});
+                    let resolution = {user: await this.getUser()};
+
+                    try {
+                        let profile = await this.getProfile();
+                        resolution['profile'] = profile;
+                    } catch(e) {
+                        console.warn(e);
+                    }
+
+                    resolve(resolution);
                 } else {
                     reject(authResponse);
                 }
@@ -162,8 +171,10 @@ export default class TicketrAPI extends API {
 
                 if(authResponse.status.toString().split("")[0] == "2") {
                     let resolution = [];
-                    for(let order of authResponse.data) {
-                        resolution.push(new TicketrOrder(order));
+                    if(authResponse.status != 204) {
+                        for(let order of authResponse.data) {
+                            resolution.push(new TicketrOrder(order));
+                        }
                     }
                     resolve(resolution);
                 } else {
