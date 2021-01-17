@@ -10,6 +10,7 @@ export default class TicketrOrder {
     #total
     #created
     #modified
+    #TicketrApi
 
     constructor({
         uuid,
@@ -21,7 +22,7 @@ export default class TicketrOrder {
         total,
         creation,
         modified
-    }) {
+    }, ticketrApi = null) {
         this.#uuid = uuid;
         this.#delivered = delivered;
         this.#paymentAttempted = paymentAttempted;
@@ -38,6 +39,8 @@ export default class TicketrOrder {
         this.#total = total;
         this.#created = new Date(creation * 1000);
         this.#modified = new Date(modified * 1000);
+
+        this.#TicketrApi = ticketrApi;
     }
 
     get uuid() {
@@ -66,5 +69,48 @@ export default class TicketrOrder {
     }
     get modified() {
         return this.#modified;
+    }
+
+    async getPaymentIntentAmount() {
+        let authResponse;
+        try {
+            authResponse = await this.#TicketrApi.sendRequest('post', `/ticketr/order/${this.#uuid}`);
+
+            if(authResponse.status.toString().split("")[0] == "2") {
+                return authResponse.data.amount;
+            } else {
+                throw authResponse;
+            }
+        } catch(e) {    
+            throw e;
+        }
+    }
+    async getPaymentIntentClientSecret() {
+        let authResponse;
+        try {
+            authResponse = await this.#TicketrApi.sendRequest('post', `/ticketr/order/${this.#uuid}`);
+
+            if(authResponse.status.toString().split("")[0] == "2") {
+                return authResponse.data.client_secret;
+            } else {
+                throw authResponse;
+            }
+        } catch(e) {    
+            throw e;
+        }
+    }
+    async getPaymentIntentStatus() {
+        let authResponse;
+        try {
+            authResponse = await this.#TicketrApi.sendRequest('post', `/ticketr/order/${this.#uuid}`);
+
+            if(authResponse.status.toString().split("")[0] == "2") {
+                return authResponse.data.status;
+            } else {
+                throw authResponse;
+            }
+        } catch(e) {    
+            throw e;
+        }
     }
 }

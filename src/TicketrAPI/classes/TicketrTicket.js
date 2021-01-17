@@ -6,7 +6,12 @@ export default class TicketrTicket {
     #name
     #description
     #terms
+    #validityPeriodType
+    #validityPeriod
+    #expiryDayPeriod
     #price
+    #operators
+    #locations
     #created
     #modified
 
@@ -16,7 +21,12 @@ export default class TicketrTicket {
         name,
         description,
         terms,
+        validityPeriodType,
+        validityPeriod,
+        expiryDayPeriod,
         price,
+        operators,
+        locations,
         created,
         modified
     }) {
@@ -25,7 +35,16 @@ export default class TicketrTicket {
         this.#name = name;
         this.#description = description;
         this.#terms = terms;
+        this.#validityPeriodType = validityPeriodType;
+        this.#validityPeriod = validityPeriod;
+        this.#expiryDayPeriod = expiryDayPeriod;
         this.#price = price;
+        let operatorClasses = [];
+        for(let operator of operators) {
+            operatorClasses.push(new TicketrOperator(operator));
+        }
+        this.#operators = operatorClasses;
+        this.#locations = locations;
         this.#created = created;
         this.#modified = modified;
     }
@@ -45,8 +64,23 @@ export default class TicketrTicket {
     get terms() {
         return this.#terms;
     }
+    get validityPeriodType() {
+        return this.#validityPeriodType;
+    }
+    get validityPeriod() {
+        return this.#validityPeriod;
+    }
+    get expiryDayPeriod() {
+        return this.#expiryDayPeriod;
+    }
     get price() {
         return this.#price;
+    }
+    get operators() {
+        return this.#operators;
+    }
+    get locations() {
+        return this.#locations;
     }
     get created() {
         return this.#created;

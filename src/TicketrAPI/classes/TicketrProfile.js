@@ -7,6 +7,7 @@ export default class TicketrProfile {
     #tickets
     #group
     #creation
+    #TicketrApi
 
     constructor({
         uuid,
@@ -15,13 +16,15 @@ export default class TicketrProfile {
         tickets,
         group,
         creation
-    }) {
+    }, ticketrApi = null) {
         this.#uuid = uuid;
         this.#name = name;
         this.#colour = colour;
-        this.#tickets = tickets.map(t => new TicketrTicketEntitlement(t));
+        this.#tickets = tickets.map(t => new TicketrTicketEntitlement(t, ticketrApi));
         this.#group = group;
         this.#creation = creation;
+
+        this.#TicketrApi = ticketrApi;
     }
 
     get uuid() {
